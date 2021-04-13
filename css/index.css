@@ -36,3 +36,8 @@ a:hover {
 a:active {
 	text-decoration: none;
 }
+
+button {
+	display: flex;
+	justify-content: center;
+}
