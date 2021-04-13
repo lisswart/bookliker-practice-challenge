@@ -1,4 +1,38 @@
 body {
 	display: grid;
-	grid-template-columns: 2fr 8fr
+	grid-template-columns: 3fr 7fr;
+	background-color: rgb(77, 72, 66);
+	color: cornsilk;
+}
+ 
+#list-panel {
+	grid-column: 1;
+}
+
+#show-panel {
+	grid-column: 2;
+}
+
+.description {
+	padding-right: 200px;
+	margin-bottom: 3em;
+}
+
+a:link {
+	text-decoration: none;
+	color:papayawhip;
+}
+
+a:visited {
+	color: rgb(229, 255, 205);
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: none;
+	color:coral;
+}
+
+a:active {
+	text-decoration: none;
 }
