@@ -13,9 +13,10 @@ body {
 	grid-column: 2;
 }
 
-.description {
+.description, p {
 	padding-right: 200px;
-	margin-bottom: 3em;
+	padding-bottom: 10em;
+	margin-bottom: 13em;
 }
 
 a:link {
@@ -41,3 +42,7 @@ button {
 	display: flex;
 	justify-content: center;
 }
+
+/* .hidden {
+	visibility: hidden;
+} */
