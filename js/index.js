@@ -34,6 +34,7 @@ function renderBook(book) {
     getAuthor(book);
     getBookSubtitle(book);
     getBookDescription(book);
+    getUsers(book);
 } 
 
 function clearBook() {
@@ -58,12 +59,12 @@ function loadImage(book) {
     individualBookPanel.id = `${book.title}`;
     const imgBook = document.createElement('img');
     imgBook.src = book.img_url;
+    imgBook.style.maxHeight = "300px";
     showPanel.appendChild(individualBookPanel);
     individualBookPanel.appendChild(imgBook);
 }
 
 function getAuthor(book) {   
-    const showPanel = document.querySelector('#show-panel'); 
     const author = document.createElement('h2');
     author.textContent = `${book.author}`;
     showPanel.appendChild(author);
@@ -79,8 +80,25 @@ function addLikeButton() {
     form.appendChild(input);
     input.addEventListener("click", event => {
         event.preventDefault();
+        getUsers();
         sendPatch();
     })
+}
+
+function getUsers(book) {
+    const userArray = book.users;
+    const userP = document.createElement("p");
+    userP.textContent = "Users who've liked the book: ";
+    showPanel.appendChild(userP);
+    const unorderedList = document.createElement("ul");
+    showPanel.appendChild(unorderedList);
+    userArray.forEach(user => {
+        const userList = document.createElement("li");
+        userList.textContent = user.username;
+        unorderedList.appendChild(userList);
+        showPanel.appendChild(unorderedList);
+    })
+    return userArray;
 }
 
 function sendPatch() {

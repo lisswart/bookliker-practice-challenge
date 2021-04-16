@@ -11,12 +11,11 @@ body {
 
 #show-panel {
 	grid-column: 2;
+	padding-left: 5em;
 }
 
 .description, p {
-	padding-right: 200px;
-	padding-bottom: 10em;
-	margin-bottom: 13em;
+	padding-right: 50px;
 }
 
 a:link {
@@ -42,5 +41,5 @@ input {
 	display: flex;
 	justify-content: center;
 	background-color: rgb(10, 102, 105);
-	color: black;
+	color: cornsilk;
 }
