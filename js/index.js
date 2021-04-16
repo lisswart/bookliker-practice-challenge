@@ -2,77 +2,85 @@ document.addEventListener("DOMContentLoaded", function() {
     fetchBooks();
 });
 
+const showPanel = document.querySelector('#show-panel'); 
+
 function fetchBooks() {
     return fetch("http://localhost:3000/books")
     .then(resp => resp.json())
-    .then(data => renderBooks(data));
+    .then(data => renderBookTitles(data));
 }
 
-function renderBooks(books) {
+function renderBookTitles(books) {
     books.forEach(book => {
         getBookTitle(book);
-        loadImage(book);
-        addLikeButton();
-        getAuthor(book);
-        getBookSubtitle(book);
-        getBookDescription(book);
     });
 }
 
 function getBookTitle(book) {
     const unorderedList = document.querySelector('#list');
     const list = document.createElement('li');
-    list.innerHTML = `<a href='#${book.title}'><h3><i>${book.title}</i></h3></a>`;
+    list.innerHTML = `<a href="#${book.title}"><h3><i>${book.title}</i></h3></a>`;
+    list.addEventListener("click", event => {
+        event.preventDefault();
+        renderBook(book);
+    })
     unorderedList.appendChild(list);
 }
 
-function getBookSubtitle(book) {
-    const showPanel = document.querySelector('#show-panel');    
-    const subTitle = document.createElement('h4');
-    subTitle.className = "hidden";    
+function renderBook(book) {
+    clearBook();
+    loadImage(book);
+    addLikeButton();
+    getAuthor(book);
+    getBookSubtitle(book);
+    getBookDescription(book);
+} 
+
+function clearBook() {
+    showPanel.innerHTML = "";
+}
+
+function getBookSubtitle(book) {   
+    const subTitle = document.createElement('h4');   
     subTitle.textContent = `${book.subtitle}`;
     showPanel.appendChild(subTitle);
 }
 
 function getBookDescription(book) {   
-    const showPanel = document.querySelector('#show-panel');
-    const description = document.createElement('p');
-    description.className = "hidden";    
+    const description = document.createElement('p');   
     description.textContent = `${book.description}`;
     showPanel.appendChild(description);
 }
 
 function loadImage(book) {
-    const showPanel = document.querySelector('#show-panel');
     const individualBookPanel = document.createElement('div');
+    individualBookPanel.style.marginTop = "2em";
     individualBookPanel.id = `${book.title}`;
     const imgBook = document.createElement('img');
-    imgBook.className = "hidden";
     imgBook.src = book.img_url;
     showPanel.appendChild(individualBookPanel);
     individualBookPanel.appendChild(imgBook);
-    //showPanel.appendChild(imgBook);
 }
 
 function getAuthor(book) {   
     const showPanel = document.querySelector('#show-panel'); 
     const author = document.createElement('h2');
-    author.className = "hidden";
     author.textContent = `${book.author}`;
     showPanel.appendChild(author);
 }
 
 function addLikeButton() {
-    const showPanel = document.querySelector('#show-panel');
     const form = document.createElement('form');
     const input = document.createElement('input');
-    form.className = "hidden";
     input.name = 'like';
     input.value = "Like";
     input.type = "submit";
     showPanel.appendChild(form);
     form.appendChild(input);
-    input.addEventListener("click", sendPatch);
+    input.addEventListener("click", event => {
+        event.preventDefault();
+        sendPatch();
+    })
 }
 
 function sendPatch() {

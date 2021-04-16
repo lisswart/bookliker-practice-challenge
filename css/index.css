@@ -38,11 +38,9 @@ a:active {
 	text-decoration: none;
 }
 
-button {
+input {
 	display: flex;
 	justify-content: center;
+	background-color: rgb(10, 102, 105);
+	color: black;
 }
-
-/* .hidden {
-	visibility: hidden;
-} */
