@@ -7,64 +7,69 @@ const showPanel = document.querySelector('#show-panel');
 function fetchBooks() {
     return fetch("http://localhost:3000/books")
     .then(resp => resp.json())
-    .then(data => renderBookTitles(data));
+    .then(renderBookTitles);
 }
 
 function renderBookTitles(books) {
+    const unorderedList = document.querySelector('#list');
     books.forEach(book => {
-        getBookTitle(book);
+        unorderedList.appendChild(getBookTitle(book));
+        getBookTitle(book).addEventListener("click", event => {
+            event.preventDefault();
+            renderBook(book);
+        })
     });
 }
 
 function getBookTitle(book) {
-    const unorderedList = document.querySelector('#list');
-    const list = document.createElement('li');
-    list.innerHTML = `<a href="#${book.title}"><h3><i>${book.title}</i></h3></a>`;
-    list.addEventListener("click", event => {
-        event.preventDefault();
-        renderBook(book);
-    })
-    unorderedList.appendChild(list);
+    const bookTitle = document.createElement('li');
+    bookTitle.innerHTML = `<a href="#${book.title}"><h3><i>${book.title}</i></h3></a>`;
+    return bookTitle;   
+}
+
+function fetchBookID(book) {
+    const bookID = book.id;
+    return bookID;
 }
 
 function renderBook(book) {
     clearBook();
-    loadImage(book);
+    getAndLoadBookImage(book);
     addLikeButton();
-    getAuthor(book);
-    getBookSubtitle(book);
-    getBookDescription(book);
-    getUsers(book);
+    getAndRenderBookAuthor(book);
+    getAndRenderBookSubtitle(book);
+    getAndRenderBookDescription(book);
+    getAndRenderUsers(book);
 } 
 
 function clearBook() {
     showPanel.innerHTML = "";
 }
 
-function getBookSubtitle(book) {   
+function getAndRenderBookSubtitle(book) {   
     const subTitle = document.createElement('h4');   
     subTitle.textContent = `${book.subtitle}`;
     showPanel.appendChild(subTitle);
 }
 
-function getBookDescription(book) {   
+function getAndRenderBookDescription(book) {   
     const description = document.createElement('p');   
     description.textContent = `${book.description}`;
     showPanel.appendChild(description);
 }
 
-function loadImage(book) {
+function getAndLoadBookImage(book) {
     const individualBookPanel = document.createElement('div');
     individualBookPanel.style.marginTop = "2em";
     individualBookPanel.id = `${book.title}`;
-    const imgBook = document.createElement('img');
-    imgBook.src = book.img_url;
-    imgBook.style.maxHeight = "300px";
+    const bookImage = document.createElement('img');
+    bookImage.src = book.img_url;
+    bookImage.style.maxHeight = "300px";
     showPanel.appendChild(individualBookPanel);
-    individualBookPanel.appendChild(imgBook);
+    individualBookPanel.appendChild(bookImage);
 }
 
-function getAuthor(book) {   
+function getAndRenderBookAuthor(book) {   
     const author = document.createElement('h2');
     author.textContent = `${book.author}`;
     showPanel.appendChild(author);
@@ -72,45 +77,42 @@ function getAuthor(book) {
 
 function addLikeButton() {
     const form = document.createElement('form');
-    const input = document.createElement('input');
-    input.name = 'like';
-    input.value = "Like";
-    input.type = "submit";
+    const likes = document.createElement('input');
+    likes.name = 'like';
+    likes.value = "Like";
+    likes.type = "submit";
     showPanel.appendChild(form);
-    form.appendChild(input);
-    input.addEventListener("click", event => {
+    form.appendChild(likes);
+    likes.addEventListener("click", event => {
         event.preventDefault();
-        getUsers();
-        sendPatch();
+        const userArray = fetchBookID(book).users;
+        userArray.push({id:1,username:"pouros"});
+        sendPatch(userArray);
     })
 }
 
-function getUsers(book) {
+function getAndRenderUsers(book) {
     const userArray = book.users;
     const userP = document.createElement("p");
     userP.textContent = "Users who've liked the book: ";
     showPanel.appendChild(userP);
-    const unorderedList = document.createElement("ul");
-    showPanel.appendChild(unorderedList);
+    const listOfUserLikes = document.createElement("ul");
     userArray.forEach(user => {
-        const userList = document.createElement("li");
-        userList.textContent = user.username;
-        unorderedList.appendChild(userList);
-        showPanel.appendChild(unorderedList);
-    })
-    return userArray;
+        const userLikes = document.createElement("li");
+        userLikes.textContent = user.username;
+        listOfUserLikes.appendChild(userLikes);
+    });
+    showPanel.appendChild(listOfUserLikes);
 }
 
-function sendPatch() {
-    return fetch("http://localhost:3000/books", {
+function sendPatch(userArray) {
+    return fetch("http://localhost:3000/books/:id", {
         method: 'patch',
         headers: {'Content-type': 'application/json'},
-        body: JSON.stringify({"users": [
-            {"id":2, "username":"auer"},
-            {"id":8, "username":"maverick"},
-            {"id":1, "username":"pouros"}
-        ]})
+        body: JSON.stringify(userArray)
     })
     .then(response => response.json())
-    .then(json => console.log(json))
+    .then(updatedList => {
+        
+    });
 }
